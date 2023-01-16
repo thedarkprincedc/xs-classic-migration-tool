@@ -16,8 +16,8 @@ function createWorkspace(){
     const hostname = ''
     const username = ''
     const password = ''
-    const command = `${rootPath}/regi create ws ${workspaceName} --host=${hostname} --user=${username} --passwd=${password} `;
-    //const command = `${rootPath}/regi help create workspace `;
+    //const command = `${rootPath}/regi create ws ${workspaceName} --host=${hostname} --user=${username} --passwd=${password} `;
+    const command = `${rootPath}/regi help create workspace `;
     exec(command, result)
     return `regi create workspace`;
 }
@@ -29,7 +29,7 @@ function copy(){
 }
 
 function commit(){
-    const command = `${rootPath}/regi help create workspace`;
+    const command = `${rootPath}/regi help commit`;
     exec(command, result)
     console.log('committing...')
     return `regi commit`;
@@ -43,7 +43,9 @@ function activate(){
 }
 
 function exportDeliveryUnit(filename){
-    const command = `${rootPath}/regi help create workspace`;
+    const command = `${rootPath}/regi help transport deliveryUnit`;
+    //const command = `${rootPath}/regi help export deliveryUnit`;
+    //const command = `${rootPath}/regi help export deliveryUnit $deliveryUnit $filename`;
     exec(command, result)
     console.log('export delivery unit')
     return `regi export ${filename}`;
@@ -68,6 +70,13 @@ function result(error, stdout, stderr) {
     console.log(`stdout: ${stdout}`);
 }
 
+function getCurrentDateTime(){
+    const currentDate = new Date();
+    const date = currentDate.getFullYear()+String(currentDate.getMonth()+1).padStart(2,0)+String(currentDate.getDate()).padStart(2,0)
+    const time = `${currentDate.getHours()}${currentDate.getMinutes()}`;
+    return [date, time].join('_');
+}
+
 function generateExportName(name, tenent, prefix){
     if(!name){  
         throw new Error("Could not find name");        
@@ -75,10 +84,5 @@ function generateExportName(name, tenent, prefix){
     if(!tenent){    
         throw new Error("Could not find tenent"); 
     }
-    prefix = prefix || "DU"
-    const fileType = '.tgz'
-    const currentDate = new Date();
-    const date = `${currentDate.getFullYear()}${currentDate.getMonth()+1}${currentDate.getDate()}`;
-    const time = `${currentDate.getHours()}${currentDate.getMinutes()}`;
-    return [prefix, name, date, time, tenent].join('_') + fileType;
+    return [prefix || 'DU', name, getCurrentDateTime(), tenent].join('_') + '.tgz';
 }
