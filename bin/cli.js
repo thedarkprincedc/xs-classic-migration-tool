@@ -6,13 +6,6 @@ const app =  require('./app')
 
 console.log(figlet.textSync(package.name));
 
-const m = {
-    repositoryName: ".hanaxsrepo",
-    source: "./dist/webapp",
-    package: "EDW.XS.ACTIVITY_REPORTING",
-    host: "awasppdmx3:3003@DV1"
-}
-
 program
     .name(package.name)
     .description(package.description)
