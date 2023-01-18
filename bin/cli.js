@@ -6,6 +6,11 @@ const app =  require('./app')
 
 console.log(figlet.textSync(package.name));
 
+const DEFAULT = {
+    HANA_SOURCEDIR: process.cwd(),
+    HANA_WORKSPACE: '__empty__'
+}
+
 program
     .name(package.name)
     .description(package.description)
@@ -14,7 +19,7 @@ program
 program
     .command('config')
     .description('creates a local configuration file')
-        .option('-s, --source <type>', 'source directory', process.env.XSHANA_SOURCEDIR || process.cwd())
+        .option('-s, --source <type>', 'source directory', process.env.XSHANA_SOURCEDIR || DEFAULT.HANA_SOURCEDIR)
         .action((options) => 
             app.runConfiguration(options)
         );
@@ -22,7 +27,11 @@ program
 program
     .command('createworkspace')
     .description('creates a local hana workspace')
-        .option('-s, --source <type>', 'source directory', process.env.XSHANA_SOURCEDIR || process.cwd())
+        .option('-s, --source <type>', 'source directory', process.env.XSHANA_SOURCEDIR || DEFAULT.HANA_SOURCEDIR)
+        .option('-w, --workspace <type>', 'workspace', process.env.XSHANA_WORKSPACE || DEFAULT.HANA_WORKSPACE)
+        .option('-h, --hostname <type>', 'hostname', process.env.XSHANA_HOSTNAME)
+        .option('-u, --username <type>', 'username', process.env.XSHANA_USERNAME)
+        .option('-p, --password <type>', 'password', process.env.XSHANA_PASSWORD)
         .action((options) => 
             app.runCreateWorkspace(options)
         );
@@ -37,7 +46,7 @@ program
 program
     .command('sync')
     .description('synchronizes file systems with hana')
-        .option('-s, --source <type>', 'source directory', process.env.XSHANA_SOURCEDIR || process.cwd())
+        .option('-s, --source <type>', 'source directory', process.env.XSHANA_SOURCEDIR || DEFAULT.HANA_SOURCEDIR)
         .option('-c, --connection <type>', 'hana connections string ex. "hostname:port@tenent"', process.env.XSHANA_HOSTNAME)
         .option('-p, --package <type>', 'hana package', process.env.XSHANA_PACKAGE)
         .option('-hu, --user <type>', 'hana username', process.env.XSHANA_USERNAME)

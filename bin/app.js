@@ -2,8 +2,8 @@ const regi = require('./regi');
 
 function runCreateWorkspace(options){
     try {
-        regi.createWorkspace()
-        console.log(options)
+        regi.createWorkspace(options)
+        //console.log(options)
     } catch(error){
         if(options.debug){
             console.error(error.stack)
@@ -15,8 +15,8 @@ function runCreateWorkspace(options){
 
 function runConfiguration(options){
     try {
-        regi.createWorkspace()
-        console.log(options)
+        regi.createWorkspace(options)
+        //console.log(options)
     } catch(error){
         if(options.debug){
             console.error(error.stack)

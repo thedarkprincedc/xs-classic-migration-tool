@@ -1,6 +1,13 @@
-const {exec, spawn} = require('child_process')
+const {exec} = require('child_process')
+const path = require('path')
 
-const rootPath = "library/regi"
+const regiPath = path.join(__dirname, '../library/regi')
+//console.log('>>%s', regiPath)
+//const rootPath = path.join(__dirname, '../../library')
+//console.log(rootPath)
+
+//const rootPath = "/Users/brett/Projects/xs-migration/library"
+
 module.exports = {
     createWorkspace,
     copy,
@@ -11,51 +18,42 @@ module.exports = {
     generateExportName
 }
 
-function createWorkspace(){
-    const workspaceName = "__empty__"
-    const hostname = ''
-    const username = ''
-    const password = ''
-    //const command = `${rootPath}/regi create ws ${workspaceName} --host=${hostname} --user=${username} --passwd=${password} `;
-    const command = `${rootPath}/regi help create workspace `;
+function createWorkspace(options){
+    if(!options.hostname){
+        throw new Error("No hostname supplied")
+    }
+    if(!options.username){
+        throw new Error("No username supplied")
+    }
+    if(!options.password){
+        throw new Error("No password supplied")
+    }
+    const command = `${regiPath} create ws ${options.workspace} --host=${options.hostname} --user=${options.username} --passwd=${options.password}`;
     exec(command, result)
-    return `regi create workspace`;
 }
 function copy(){
-    const command = `${rootPath}/regi help create workspace`;
+    const command = `${regiPath} help create workspace`;
     exec(command, result)
-    console.log('copying...')
-    return `copy `
 }
 
 function commit(){
-    const command = `${rootPath}/regi help commit`;
+    const command = `${regiPath} help commit`;
     exec(command, result)
-    console.log('committing...')
-    return `regi commit`;
 }
 
 function activate(){
-    const command = `${rootPath}/regi help create workspace`;
+    const command = `${regiPath} help create workspace`;
     exec(command, result)
-    console.log('activating...')
-    return `regi activate`;
 }
 
 function exportDeliveryUnit(filename){
-    const command = `${rootPath}/regi help transport deliveryUnit`;
-    //const command = `${rootPath}/regi help export deliveryUnit`;
-    //const command = `${rootPath}/regi help export deliveryUnit $deliveryUnit $filename`;
+    const command = `${regiPath} help export deliveryUnit $deliveryUnit $filename`;
     exec(command, result)
-    console.log('export delivery unit')
-    return `regi export ${filename}`;
 }
 
 function importDeliveryUnit(filename){ 
-    const command = `${rootPath}/regi help import`;
+    const command = `${regiPath} help import`;
     exec(command, result)
-    console.log('import delivery unit')
-    return `regi import ${filename}`;
 }
 
 function result(error, stdout, stderr) {

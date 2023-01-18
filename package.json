@@ -8,14 +8,16 @@
   },
   "scripts": {
     "start": "node bin/cli.js",
-    "build": "pkg . --compress GZip",
+    "build": "pkg . --compress GZip -d",
     "test": "mocha"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "commander": "^10.0.0",
-    "figlet": "^1.5.2"
+    "figlet": "^1.5.2",
+    "fsevents": "^2.3.2",
+    "path": "^0.12.7"
   },
   "devDependencies": {
     "mocha": "^10.2.0",
@@ -23,11 +25,11 @@
   },
   "pkg": {
     "scripts": [
-      "/lib/**/sam-gov-login.js"
+      "/bin/**/*"
     ],
     "assets": [
       "node_modules/**/*"
     ],
-    "outputPath": "dist"
+    "outputPath": "./dist"
   }
 }
