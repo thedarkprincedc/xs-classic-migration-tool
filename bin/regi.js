@@ -1,86 +1,81 @@
-const {exec} = require('child_process')
-const path = require('path')
+const { exec } = require('node:child_process');
 
-const regiPath = path.join(__dirname, '../library/regi')
-//console.log('>>%s', regiPath)
-//const rootPath = path.join(__dirname, '../../library')
-//console.log(rootPath)
+function hostnameValidation(hostname){
+    return /([\d]+\.[\d]+\.[\d]+\.[\d]+|[A-Z0-9]+\:[\d]+)/ig.test(hostname)
+}
 
-//const rootPath = "/Users/brett/Projects/xs-migration/library"
+function regiMigrate(options){
+    const command = `${options.script_dir}/regi-migrate.sh`
+    const opts = {
+        env: {
+            PATH: options.path,
+            REGI_WORKSPACE: options.workspace,
+            REGI_PACKAGE: options.package,
+            REGI_SOURCE: options.source,
+            REGI_HOST: options.hostname,
+            REGI_USER: options.username,
+            REGI_PASSWD: options.password
+        }
+    }
+    if(!hostnameValidation(options.hostname)){
+        throw new Error('hostname not formatted correctly')
+    }
+    exec(command, opts, (error, stdout, stderr) => {
+        if(error){
+            console.error(`exec error: ${error}`)
+            return;
+        }
+        console.log(stdout)
+        console.log(stderr)
+    })
+}
+
+function regiExport(option){
+    const command = `${options.script_dir}/regi-export.sh`;
+    const opts = {
+        env: {
+            PATH: options.path,
+            REGI_DELIVERY_UNIT: options.deliveryunit,
+            REGI_DU_FILENAME: options.filename || `du-${options.deliveryunit}-${options.timestamp}.tgz`,
+            REGI_PACKAGE: options.package,
+            REGI_HOST: options.hostname,
+            REGI_USER: options.username,
+            REGI_PASSWD: options.password
+        }
+    }
+    exec(command, opts, (error, stdout, stderr) => {
+        if(error){
+            console.error(`exec error: ${error}`)
+            return;
+        }
+        console.log(stdout)
+        console.log(stderr)
+    })
+}
+
+function regiImport(option){
+    const command = `${options.script_dir}/regi-import.sh`;
+    const opts = {
+        env: {
+            PATH: options.path,
+            FILENAME: option.filename,
+            REGI_HOST: options.hostname,
+            REGI_USER: options.username,
+            REGI_PASSWD: options.password
+        }
+    }
+    exec(command, opts, (error, stdout, stderr) => {
+        if(error){
+            console.error(`exec error: ${error}`)
+            return;
+        }
+        console.log(stdout)
+        console.log(stderr)
+    })
+}
 
 module.exports = {
-    createWorkspace,
-    copy,
-    commit,
-    activate,
-    exportDeliveryUnit,
-    importDeliveryUnit,
-    generateExportName
-}
-
-function createWorkspace(options){
-    if(!options.hostname){
-        throw new Error("No hostname supplied")
-    }
-    if(!options.username){
-        throw new Error("No username supplied")
-    }
-    if(!options.password){
-        throw new Error("No password supplied")
-    }
-    const command = `${regiPath} create ws ${options.workspace} --host=${options.hostname} --user=${options.username} --passwd=${options.password}`;
-    exec(command, result)
-}
-function copy(){
-    const command = `${regiPath} help create workspace`;
-    exec(command, result)
-}
-
-function commit(){
-    const command = `${regiPath} help commit`;
-    exec(command, result)
-}
-
-function activate(){
-    const command = `${regiPath} help create workspace`;
-    exec(command, result)
-}
-
-function exportDeliveryUnit(filename){
-    const command = `${regiPath} help export deliveryUnit $deliveryUnit $filename`;
-    exec(command, result)
-}
-
-function importDeliveryUnit(filename){ 
-    const command = `${regiPath} help import`;
-    exec(command, result)
-}
-
-function result(error, stdout, stderr) {
-    if (error) {
-        console.log(`error: ${error.message}`);
-        return;
-    }
-    if (stderr) {
-        console.log(`stderr: ${stderr}`);
-        return;
-    }
-    console.log(`stdout: ${stdout}`);
-}
-
-function getCurrentDateTime(){
-    const currentDate = new Date();
-    const date = currentDate.getFullYear()+String(currentDate.getMonth()+1).padStart(2,0)+String(currentDate.getDate()).padStart(2,0)
-    const time = `${currentDate.getHours()}${currentDate.getMinutes()}`;
-    return [date, time].join('_');
-}
-
-function generateExportName(name, tenent, prefix){
-    if(!name){  
-        throw new Error("Could not find name");        
-    }
-    if(!tenent){    
-        throw new Error("Could not find tenent"); 
-    }
-    return [prefix || 'DU', name, getCurrentDateTime(), tenent].join('_') + '.tgz';
+    regiMigrate: regiMigrate,
+    regiExport: regiExport,
+    regiImport: regiImport
 }

@@ -1,0 +1,1 @@
+regi import ${REGI_FILENAME}
