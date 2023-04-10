@@ -30,7 +30,7 @@ function regiMigrate(options){
     })
 }
 
-function regiExport(option){
+function regiExport(options){
     const command = `${options.script_dir}/regi-export.sh`;
     const opts = {
         env: {
@@ -53,12 +53,12 @@ function regiExport(option){
     })
 }
 
-function regiImport(option){
+function regiImport(options){
     const command = `${options.script_dir}/regi-import.sh`;
     const opts = {
         env: {
             PATH: options.path,
-            FILENAME: option.filename,
+            FILENAME: options.filename,
             REGI_HOST: options.hostname,
             REGI_USER: options.username,
             REGI_PASSWD: options.password
@@ -73,9 +73,32 @@ function regiImport(option){
         console.log(stderr)
     })
 }
+function regiHelp(options){
+    const command = `regi help --browse`;
+    const opts = {
+        env: {
+            PATH: options.path,
+            FILENAME: options.filename,
+            REGI_HOST: options.hostname,
+            REGI_USER: options.username,
+            REGI_PASSWD: options.password,
+            BROWSER: options.browser
+        }
+    }
+    exec(command, opts, (error, stdout, stderr) => {
+        if(error){
+            console.error(`exec error: ${error}`)
+            return;
+        }
+        console.log(stdout)
+        console.log(stderr)
+    })
+}
+
 
 module.exports = {
     regiMigrate: regiMigrate,
     regiExport: regiExport,
-    regiImport: regiImport
+    regiImport: regiImport,
+    regiHelp: regiHelp
 }
